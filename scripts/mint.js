@@ -11,10 +11,20 @@ async function main() {
     const signer = accounts[0];
     let aiNft1 = new ethers.Contract(AINFT1_CONTRACT_ADDRESS, AiNft1.abi, signer);
     let aiNft2 = new ethers.Contract(AINFT2_CONTRACT_ADDRESS, AiNft2.abi, signer);
-    for (let i = 2; i <= 4; i++) {
+    for (let i = 1; i <= 4; i++) {
         let gas = await (await fetch(GAS_STAION_URL)).json();
-        let url = "https://tnakagawa.github.io/ainft/nft1/fuji" + i + ".json"
+        let url = "https://tnakagawa.github.io/ainft/nft1/fuji1" + i + ".json"
         let tx = await aiNft1.mint(signer.address, url, {
+            maxFeePerGas: hre.ethers.parseUnits(gas.fast.maxFee.toFixed(9), "gwei"),
+            maxPriorityFeePerGas: hre.ethers.parseUnits(gas.fast.maxPriorityFee.toFixed(9), "gwei"),
+        });
+        let receipt = await tx.wait();
+        console.log(receipt.status);
+    }
+    for (let i = 1; i <= 4; i++) {
+        let gas = await (await fetch(GAS_STAION_URL)).json();
+        let url = "https://tnakagawa.github.io/ainft/nft2/samurai" + i + ".json"
+        let tx = await aiNft2.mint(signer.address, url, {
             maxFeePerGas: hre.ethers.parseUnits(gas.fast.maxFee.toFixed(9), "gwei"),
             maxPriorityFeePerGas: hre.ethers.parseUnits(gas.fast.maxPriorityFee.toFixed(9), "gwei"),
         });
